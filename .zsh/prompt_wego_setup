@@ -1,7 +1,7 @@
 # Set Variables
 user="%B%F{green}%n%f%b"
 host="%B%F{green}%m%f%b"
-currentDirectory="%F{blue}%c%f"
+currentDirectory="%B%F{blue}%c%f%b"
 
 # Prompt
 PS1='${user}%B%F{green}@%f%b${host} ${currentDirectory} %% '
