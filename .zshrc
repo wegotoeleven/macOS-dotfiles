@@ -46,10 +46,10 @@ sign ()
     if [[ "${1}" =~ .pkg || "${1}" =~ .mpkg ]]
     then
         echo "Signing package..."
-        /usr/bin/productsign --sign "${chosenCert}" "${1}" $(dirname "${1}")/Signed-"${file}"
+        /usr/bin/productsign --sign "${chosenCert}" "${1}" "$(dirname "${1}")/Signed-${file}"
     else
         echo "Signing code..."
-        /usr/bin/security cms -S -N "${chosenCert}" -i "${1}" -o $(dirname "${1}")/Signed-"${file}"
+        /usr/bin/security cms -S -N "${chosenCert}" -i "${1}" -o "$(dirname "${1}")/Signed-${file}"
     fi
 }
 
@@ -61,11 +61,11 @@ unsign ()
     then
         echo "Package found."
         /usr/sbin/pkgutil --expand "${1}" /tmp/expand.pkg
-        /usr/sbin/pkgutil --flatten /tmp/expand.pkg $(dirname "$1")/Unsigned-"${file}"
+        /usr/sbin/pkgutil --flatten /tmp/expand.pkg "$(dirname "$1")/Unsigned-${file}"
     else
         echo "Code found."
-        /usr/bin/openssl smime -inform DER -verify -in "${1}" -noverify -out $(dirname "$1")/Unsigned-"${file}"
-        /usr/bin/plutil -convert xml1 $(dirname "$1")/Unsigned-"${file}"
+        /usr/bin/openssl smime -inform DER -verify -in "${1}" -noverify -out "$(dirname "$1")/Unsigned-${file}"
+        /usr/bin/plutil -convert xml1 "$(dirname "$1")/Unsigned-${file}"
     fi
 }
 
@@ -110,13 +110,19 @@ changemac ()
     sudo /sbin/ifconfig "${chosenIface}" ether "${newmac}"
 }
 
-# makedmg ()
-# {
-#     dmgName=$(basename "${1}")
-#     dirName=$(dirname "${1}")
-#     hdiutil create -volname "${dmgName}" -srcfolder "${1}" -ov -format UDZO "${dirName}"/"${dmgName}".dmg
-# }
-#
+makedmg ()
+{
+    # Determine if the content is a folder, exit if not
+    if [ ! -d "${1}" ]
+    then
+        echo "Supplied content is not a folder. Exiting..."
+    else
+        dmgName=$(basename "${1}")
+        dirName=$(dirname "${1}")
+        hdiutil create -volname "${dmgName}" -srcfolder "${1}" -ov -format UDZO "${dirName}"/"${dmgName}".dmg
+    fi
+}
+
 # check-version ()
 # {
 #     defaults read "${1}/Contents/Info.plist" CFBundleShortVersionString
