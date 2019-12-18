@@ -123,6 +123,46 @@ makedmg ()
     fi
 }
 
+whatismyip ()
+{
+    /usr/bin/dig TXT +short o-o.myaddr.l.google.com @ns1.google.com | awk -F'"' '{ print $2}'
+}
+
+finduti ()
+{
+    /usr/bin/mdls -name kMDItemContentTypeTree "${1}"
+}
+
+exportcert ()
+{
+    file=$(basename "${1}")
+    echo "cat /plist/dict/array/dict[1]/data/text()" | xmllint --nocdata --shell "${1}" | sed '1d;$d' | base64 -D > "$(dirname "$1")/exported-${file}.pem" 
+}
+
+expandurl ()
+{
+    curl -sIL $1 2>&1 | awk '/^Location/ {print $2}' | tail -n1
+}
+
+# createvenv ()
+# {
+#     pyVer=(python python3)
+#     for pyVerChoice in '${pyVer}'
+#     do
+#         pyVerChosen+=("${pyVerChoice}")
+#         echo "$number) ${pyverChoice}"
+#         let "number += 1"
+#     done
+#     currentDir="$(pwd)"
+#     venvName=$(basename "$(echo ${currentDir})")
+#     # if [[ "${1}" == "python1" ]]
+#     # then
+#     #     python -m virtualenv "${currentDir}"
+#     # else
+#     #     python3 -m venv "${currentDir}"
+#     # fi
+# }
+
 # check-version ()
 # {
 #     defaults read "${1}/Contents/Info.plist" CFBundleShortVersionString
@@ -132,14 +172,4 @@ makedmg ()
 # check-identifier ()
 # {
 #     defaults read "${1}/Contents/Info.plist" CFBundleIdentifier
-# }
-#
-# expandurl ()
-# {
-#     curl -sIL $1 2>&1 | awk '/^Location/ {print $2}' | tail -n1;
-# }
-#
-# switch_mode ()
-# {
-#     osascript -e 'tell app "System Events" to tell appearance preferences to set dark mode to not dark mode'
 # }
