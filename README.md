@@ -2,12 +2,12 @@
 
 ## Table of Contents
 
-- [macOS dotfiles](#macOS dotfiles)
-  - [Purpose](#purpose)
-  - [Includes](#includes)
-  - [How to contribute](#how-to-contribute)
-  - [Support](#support)
-  - [License](#license)
+- [Purpose](#purpose)
+- [Includes:](#includes)
+  - [Included functions:](#included-functions)
+- [How to contribute](#how-to-contribute)
+- [Support](#support)
+- [License](#license)
   
 ## Purpose
 
@@ -15,28 +15,28 @@ This is my collection of dotfiles that I use to customise my terminal environmen
 
 ## Includes:
 
-* .profile for bash and sh
-* .zshrc for zsh. I don't use tools like `ohmyzsh` as I prefer to configure my environment manually
-* .vimrc for Vim configuration
+- .profile for bash and sh
+- .zshrc for zsh. I don't use tools like `ohmyzsh` as I prefer to configure my environment manually
+- .vimrc for Vim configuration
 
 With the change to the default shell in macOS Catalina, my .zshrc dotfile contains the majority of configuration as it's my promary shell.
 To this end, most of my functions are contained here, and not in my .profile dotfile.
 
 ### Included functions:
 
-* sign
-* unsign
-* checksign
-* changemac
-* makedmg
-* whatismyip
-* finduti
-* exportcert
-* generatepubkey
-* expandurl
-* activate
-* findmacosinstallerversion
-* removequarantine
+- sign
+- unsign
+- checksign
+- changemac
+- makedmg
+- whatismyip
+- finduti
+- exportcert
+- generatepubkey
+- expandurl
+- activate
+- findmacosinstallerversion
+- removequarantine
 
 ## How to contribute
 

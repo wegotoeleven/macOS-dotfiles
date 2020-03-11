@@ -1,7 +1,6 @@
 # Set Variables
-user="%B%F{green}%n%f%b"
-host="%B%F{green}%m%f%b"
-currentDirectory="%B%F{blue}%c%f%b"
+currentShell=$(echo $(sh -c 'ps -p $$ -o ppid=' | xargs ps -o comm= -p | tr -d '-'))
 
 # Prompt
-PS1='${user}%B%F{green}@%f%b${host} ${currentDirectory} %% '
+PS1='%F{240}(${currentShell})%f %B%F{green}%n@%m%f%b %B%F{blue}%c%f%b %% '
+#    <---Show current shell---> <Show host and user> <show directory> <%>

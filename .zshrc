@@ -1,17 +1,26 @@
-# Exports
+#### Exports
+
+# Set path envar to homebrew directory at $HOME/.homebrew/, and custom binary 
+# folder at $HOME/.binaries
 export PATH=$HOME/.binaries:$HOME/.homebrew/bin:$PATH
-export FPATH=$HOME/.zsh:$FPATH
+export FPATH=$HOME/.zsh:$HOME/.homebrew/share/zsh/site-functions:$FPATH
+
+# Enable cli colours
 export CLICOLOR=1
+
+# Set hostory options
 export HISTSIZE=100000
 export SAVEHIST=1000000
 
-# Options
+#### Options
 setopt APPEND_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
 setopt HIST_NO_STORE
 setopt PROMPT_SUBST
 
-# Plugins
+#### Plugins
+
+# Load prompt
 autoload -Uz promptinit
 
 # Set prompt theme
@@ -139,37 +148,66 @@ exportcert ()
     echo "cat /plist/dict/array/dict[1]/data/text()" | xmllint --nocdata --shell "${1}" | sed '1d;$d' | base64 -D > "$(dirname "$1")/exported-${file}.pem" 
 }
 
+generatepubkey ()
+{
+    /usr/bin/ssh-keygen -y -f "${1}" > "${1}".pub
+}
+
 expandurl ()
 {
     curl -sIL $1 2>&1 | awk '/^Location/ {print $2}' | tail -n1
 }
 
-# createvenv ()
-# {
-#     pyVer=(python python3)
-#     for pyVerChoice in '${pyVer}'
-#     do
-#         pyVerChosen+=("${pyVerChoice}")
-#         echo "$number) ${pyverChoice}"
-#         let "number += 1"
-#     done
-#     currentDir="$(pwd)"
-#     venvName=$(basename "$(echo ${currentDir})")
-#     # if [[ "${1}" == "python1" ]]
-#     # then
-#     #     python -m virtualenv "${currentDir}"
-#     # else
-#     #     python3 -m venv "${currentDir}"
-#     # fi
-# }
+activate ()
+{
+    if [ -z "${1}" ]
+    then
+        venvdir="."
+    else
+        venvdir="${1}"
+    fi
+    
+    if [ ! -e "${venvdir}/bin/activate" ]
+    then
+        echo "Invalid virtualenv directory"
+    else
+        source "${venvdir}/bin/activate"
+    fi
+}
 
-# check-version ()
-# {
-#     defaults read "${1}/Contents/Info.plist" CFBundleShortVersionString
-#     defaults read "${1}/Contents/Info.plist" CFBundleVersion
-# }
-#
-# check-identifier ()
-# {
-#     defaults read "${1}/Contents/Info.plist" CFBundleIdentifier
-# }
+findmacosinstallerversion ()
+{
+    baseSystem=$(find "${1}" -name "BaseSystem.dmg" | grep '.-')
+    if [ $? -eq 1 ]
+    then
+        echo "Unable to find BaseSystem.dmg. Searching for InstallESD instead..."
+        installESD=$(find "${1}" -name "InstallESD.dmg" | grep '.-')
+        if [ $? -eq 1 ]
+        then
+            echo "Unable to find InstallESD.dmg. Are you sure this is a macOS Installer?!"
+            return 1
+        else
+            installESDMounted=$(hdiutil attach "${installESD}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
+            baseSystem=$(find "${installESDMounted}" -name "BaseSystem.dmg" | grep '.-')
+        fi
+    fi
+    basesystemMounted=$(hdiutil attach "${baseSystem}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
+
+    productName=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductName)
+    productBuildVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductBuildVersion)
+    productVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductVersion)
+
+    echo "${productName} ${productVersion}, build ${productBuildVersion}"
+
+    hdiutil detach "${basesystemMounted}" > /dev/null
+
+    if [ -e "${installESDMounted}" ]
+    then
+        hdiutil detach "${installESDMounted}" > /dev/null
+    fi
+}
+
+removequarantine ()
+{
+    xattr -d com.apple.quarantine "${1}"
+}
