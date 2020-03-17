@@ -2,5 +2,5 @@
 currentShell=$(echo $(sh -c 'ps -p $$ -o ppid=' | xargs ps -o comm= -p | tr -d '-'))
 
 # Prompt
-PS1='%F{240}(${currentShell})%f %B%F{green}%n@%m%f%b %B%F{blue}%c%f%b %% '
-#    <---Show current shell---> <Show host and user> <show directory> <%>
+PS1='%B%F{green}%n@%m%f%b %B%F{blue}%c%f%b %F{245}(${currentShell})%f %% '
+#    <Show host and user> <show directory> <---Show current shell---> <%>
