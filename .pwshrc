@@ -1,5 +1,0 @@
-function prompt
-{
-    Write-Host ("PS " + $(get-location) +">") -nonewline
-    return " "
-}

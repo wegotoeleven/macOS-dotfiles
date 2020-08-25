@@ -1,7 +1,6 @@
 #### Exports
 
-# Set path envar to homebrew directory at $HOME/.homebrew/, and custom binary 
-# folder at $HOME/.binaries
+# Set path envar to homebrew directory at $HOME/.homebrew/, and custom binary folder at $HOME/.binaries
 export PATH=$HOME/.binaries:$HOME/.homebrew/bin:$PATH
 export FPATH=$HOME/.zsh:$HOME/.homebrew/share/zsh/site-functions:$FPATH
 
@@ -33,7 +32,7 @@ sign ()
     # Get available certificates
     number=1
     IFS=$'\n'
-    for cert in $(/usr/bin/security find-certificate -a -c Developer | awk -F '=' '/"alis"/ {print $2}' | sed 's/"//g')
+    for cert in $(/usr/bin/security find-certificate -a -c Developer | awk -F '=' '/"alis"/ {print $2}' | awk '/\(.*\)/ { print }' | sed 's/"//g')
     do
         cnames+=("${cert}")
         echo "$number) ${cert}"
@@ -139,7 +138,7 @@ whatismyip ()
 
 finduti ()
 {
-    /usr/bin/mdls -name kMDItemContentTypeTree "${1}"
+    /usr/bin/mdls -name kMDItemContentType "${1}"
 }
 
 exportcert ()
@@ -158,6 +157,43 @@ expandurl ()
     curl -sIL $1 2>&1 | awk '/^Location/ {print $2}' | tail -n1
 }
 
+# findmacosinstallerversion ()
+# {
+#     baseSystem=$(find "${1}" -name "BaseSystem.dmg")
+#     if [ $? -eq 1 ]
+#     then
+#         echo "Unable to find BaseSystem.dmg. Searching for InstallESD instead..."
+#         installESD=$(find "${1}" -name "InstallESD.dmg")
+#         if [ $? -eq 1 ]
+#         then
+#             echo "Unable to find InstallESD.dmg. Are you sure this is a macOS Installer?!"
+#             return 1
+#         else
+#             installESDMounted=$(hdiutil attach "${installESD}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
+#             baseSystem=$(find "${installESDMounted}" -name "BaseSystem.dmg" | grep '.-')
+#         fi
+#     fi
+#     basesystemMounted=$(hdiutil attach "${baseSystem}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
+
+#     productName=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductName)
+#     productBuildVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductBuildVersion)
+#     productVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductVersion)
+
+#     echo "${productName} ${productVersion}, build ${productBuildVersion}"
+
+#     hdiutil detach "${basesystemMounted}" > /dev/null
+
+#     if [ -e "${installESDMounted}" ]
+#     then
+#         hdiutil detach "${installESDMounted}" > /dev/null
+#     fi
+# }
+
+removequarantine ()
+{
+    xattr -d com.apple.quarantine "${1}"
+}
+
 activate ()
 {
     if [ -z "${1}" ]
@@ -169,45 +205,35 @@ activate ()
     
     if [ ! -e "${venvdir}/bin/activate" ]
     then
-        echo "Invalid virtualenv directory"
-    else
-        source "${venvdir}/bin/activate"
+        echo "Invalid virtualenv directory. Would you like to create?"
+        read yno
+        case $yno in
+
+            [yY] | [yY][Ee][Ss] )
+                echo "Specify path to Python binary:" 
+                read pythonBin
+                pythonBin=$(which "${pythonBin}")
+                if [ -e "${pythonBin}" ]
+                then
+                    echo "Creating virtualenv ${1} using ${pythonBin}..."
+                    virtualenv -p "${pythonBin}" "${1}"
+                else
+                    echo "Invalid Python binary location."
+                    return 1
+                fi
+                ;;
+
+            [nN] | [nN][Oo] )
+                yesNo="no"
+                return 1
+                ;;
+
+            *)
+                echo "Invalid input."
+                return 1
+                ;;
+        esac
     fi
-}
 
-findmacosinstallerversion ()
-{
-    baseSystem=$(find "${1}" -name "BaseSystem.dmg" | grep '.-')
-    if [ $? -eq 1 ]
-    then
-        echo "Unable to find BaseSystem.dmg. Searching for InstallESD instead..."
-        installESD=$(find "${1}" -name "InstallESD.dmg" | grep '.-')
-        if [ $? -eq 1 ]
-        then
-            echo "Unable to find InstallESD.dmg. Are you sure this is a macOS Installer?!"
-            return 1
-        else
-            installESDMounted=$(hdiutil attach "${installESD}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
-            baseSystem=$(find "${installESDMounted}" -name "BaseSystem.dmg" | grep '.-')
-        fi
-    fi
-    basesystemMounted=$(hdiutil attach "${baseSystem}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
-
-    productName=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductName)
-    productBuildVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductBuildVersion)
-    productVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductVersion)
-
-    echo "${productName} ${productVersion}, build ${productBuildVersion}"
-
-    hdiutil detach "${basesystemMounted}" > /dev/null
-
-    if [ -e "${installESDMounted}" ]
-    then
-        hdiutil detach "${installESDMounted}" > /dev/null
-    fi
-}
-
-removequarantine ()
-{
-    xattr -d com.apple.quarantine "${1}"
+    source "${venvdir}/bin/activate"
 }

@@ -2,5 +2,5 @@
 CURRENT_SHELL=$(sh -c "ps -p $$ 2>/dev/null" | tail -n 1 | awk '{ print $4 }' | tr -d '-')
 
 # Prompt
-PS1='%B%F{green}%n@%m%f%b %B%F{blue}%c%f%b %F{245}(${CURRENT_SHELL})%f %% '
 #    <Show host and user> <show directory> <---Show current shell---> <%>
+PS1='%B%F{green}%n@%m%f%b %B%F{blue}%c%f%b %F{245}(${CURRENT_SHELL})%f %% '
