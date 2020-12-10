@@ -7,7 +7,7 @@ export FPATH=$HOME/.zsh:$HOME/.homebrew/share/zsh/site-functions:$FPATH
 # Enable cli colours
 export CLICOLOR=1
 
-# Set hostory options
+# Set history options
 export HISTSIZE=100000
 export SAVEHIST=1000000
 
@@ -156,38 +156,6 @@ expandurl ()
 {
     curl -sIL $1 2>&1 | awk '/^Location/ {print $2}' | tail -n1
 }
-
-# findmacosinstallerversion ()
-# {
-#     baseSystem=$(find "${1}" -name "BaseSystem.dmg")
-#     if [ $? -eq 1 ]
-#     then
-#         echo "Unable to find BaseSystem.dmg. Searching for InstallESD instead..."
-#         installESD=$(find "${1}" -name "InstallESD.dmg")
-#         if [ $? -eq 1 ]
-#         then
-#             echo "Unable to find InstallESD.dmg. Are you sure this is a macOS Installer?!"
-#             return 1
-#         else
-#             installESDMounted=$(hdiutil attach "${installESD}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
-#             baseSystem=$(find "${installESDMounted}" -name "BaseSystem.dmg" | grep '.-')
-#         fi
-#     fi
-#     basesystemMounted=$(hdiutil attach "${baseSystem}" -nobrowse | awk -F"\t" '/\/dev\/disk/ && /Apple/ { print $NF }')
-
-#     productName=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductName)
-#     productBuildVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductBuildVersion)
-#     productVersion=$(defaults read "${basesystemMounted}/System/Library/CoreServices/SystemVersion.plist" ProductVersion)
-
-#     echo "${productName} ${productVersion}, build ${productBuildVersion}"
-
-#     hdiutil detach "${basesystemMounted}" > /dev/null
-
-#     if [ -e "${installESDMounted}" ]
-#     then
-#         hdiutil detach "${installESDMounted}" > /dev/null
-#     fi
-# }
 
 removequarantine ()
 {

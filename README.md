@@ -11,7 +11,7 @@
   
 ## Purpose
 
-This is my collection of dotfiles that I use to customise my terminal environment. 
+This is my collection of dotfiles that I use to customise my macOS terminal environment. 
 
 ## Includes:
 
@@ -34,9 +34,8 @@ To this end, most of my functions are contained here, and not in my .profile dot
 - exportcert
 - generatepubkey
 - expandurl
-- activate
-- findmacosinstallerversion
 - removequarantine
+- activate
 
 ## How to contribute
 
