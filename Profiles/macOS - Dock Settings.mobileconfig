@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadDisplayName</key>
+			<string>Dock</string>
+			<key>PayloadIdentifier</key>
+			<string>BDCA1D59-E71D-47E6-9477-0CE471F2680F</string>
+			<key>PayloadOrganization</key>
+			<string></string>
+			<key>PayloadType</key>
+			<string>com.apple.dock</string>
+			<key>PayloadUUID</key>
+			<string>BDCA1D59-E71D-47E6-9477-0CE471F2680F</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+			<key>autohide</key>
+			<true/>
+			<key>showhidden</key>
+			<true/>
+			<key>size-immutable</key>
+			<true/>
+			<key>tilesize</key>
+			<integer>48</integer>
+		</dict>
+	</array>
+	<key>PayloadDisplayName</key>
+	<string>macOS - Dock Settings</string>
+	<key>PayloadIdentifier</key>
+	<string>4B8255F7-0FF8-43F3-ADD0-54D22B702B28</string>
+	<key>PayloadOrganization</key>
+	<string>wegotoeleven</string>
+	<key>PayloadScope</key>
+	<string>User</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>4B8255F7-0FF8-43F3-ADD0-54D22B702B28</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

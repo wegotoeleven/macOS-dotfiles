@@ -19,8 +19,7 @@ This is my collection of dotfiles that I use to customise my macOS terminal envi
 - .zshrc for zsh. I don't use tools like `ohmyzsh` as I prefer to configure my environment manually
 - .vimrc for Vim configuration
 
-With the change to the default shell in macOS Catalina, my .zshrc dotfile contains the majority of configuration as it's my promary shell.
-To this end, most of my functions are contained here, and not in my .profile dotfile.
+With the change to the default shell in macOS Catalina, my .zshrc dotfile contains the majority of configuration as it's my primary shell. Most of my functions are contained here, and not in my bash/sh .profile dotfile.
 
 ### Included functions:
 
@@ -36,12 +35,13 @@ To this end, most of my functions are contained here, and not in my .profile dot
 - expandurl
 - removequarantine
 - activate
+- Some config profiles for some default app config
 
 ## How to contribute
 
 1. Fork this project, if required
 2. Create a new branch (`git checkout -b myNewBranch`)
-3. Make changes, and commit (`git commit -am "myChanges"`)
+3. Make changes, and commit (`git commit -m "myChanges"`)
 4. Push to the new branch (`git push origin myNewBranch`)
 5. Create new pull request
 
